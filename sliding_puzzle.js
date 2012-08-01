@@ -41,17 +41,10 @@ var SlidingPuzzle =  {
 
     getBlankPosition: function(board){
         var blank = 0;
-        var i = 0;
-        var j = 0;
-        var found = 0;
         var n = board.length
-        while(!found && i<n){ 
-            while(!found && j<n){
+        for (var i=0;i<n;i++)
+            for(var j=0; j<n;j++)
                 if (board[i][j] == blank) return [i,j];
-                j++;
-            }
-        j=0;i++;
-        }
         return null;
     },
 
@@ -138,19 +131,18 @@ function makeNode(state, parent, action, cost, depth){
 }
 
 
-sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
 
 function searchBFS(problem){
     var action_seq = [];
     var queue = [];
-	queue.push(makeNode(problem.initial_state,null,null,0,0));
     var max_nodes = 10000;
     var depth = 0;
     var nodes_expanded = 0;
     var end = false;
+    queue.push(makeNode(problem.initial_state,null,null,0,0));
     console.log("starting search");
 	while(!end && queue.length>0 && nodes_expanded<max_nodes){
-        nodes_expanded++;
+            nodes_expanded++;
 		node = queue.shift();
 		if (problem.goal_test(node.state)){
             current_node = node;
@@ -166,20 +158,78 @@ function searchBFS(problem){
 		    for (var i=0;i<succesors.length;i++)
 			    queue.push(makeNode(succesors[i].state,node,succesors[i].action,node.cost+problem.cost(node.state,node.action),node.depth+1));
         }
-        if (node.cost > depth) depth = node.cost;
+        if (node.depth > depth) depth = node.depth;
 	}
     console.log("Expanded: " + nodes_expanded + " nodes");
     console.log("Depth: " + depth );
     return action_seq;
 }
 
+function searchDFS(problem, depth_limit){
+	var stack = [];
+	var depth = 0;
+	var end = false;
+	var action_seq = [];
+	var nodes_expanded = 0;
+	stack.push(makeNode(problem.initial_state,null,null,0,0));
+	console.log("starting search");
+	while(!end && stack.length>0){
+		nodes_expanded++;
+		node = stack.pop();
+		if( problem.goal_test(node.state)){
+      	      current_node = node;
+      	      while (current_node.parent != null){
+      	          action_seq.push(current_node.action);
+      	          current_node = current_node.parent;
+      	      }
+      	      action_seq.reverse();
+      	      console.log(action_seq);
+      	      end = true;
+		}else{
+			var succesors = problem.succesors(node.state);
+			if(node.depth<=depth_limit)
+				for (var i=0;i<succesors.length;i++){
+					stack.push(makeNode(succesors[i].state,node,succesors[i].action,node.cost+problem.cost(node.state,node.action),node.depth+1));
+					depth = node.depth+1;
+				}
+		}
+	}
+    console.log("Expanded: " + nodes_expanded + " nodes");
+    console.log("Depth: " + depth );
+    if (depth > depth_limit && stack.length==0) console.log("Depth limit reached");
+    return action_seq;
+}
+
+function searchDFSID(problem){
+	var action_seq = [];
+	var depth_limit = 0;
+	var iteration_limit = 50;
+	var expanded_nodes = 0;
+	var end = false;
+	while (!end && action_seq.length == 0){
+		action_seq = searchDFS(problem,depth_limit);
+		depth_limit++;
+		if (depth_limit>iteration_limit)
+			end = true;
+	}
+	return action_seq;
+}
 
 
+sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
 assertTrue(arrayIsEqual(searchBFS(sliding_problem),["left","left","up","right","up","right","down","down"]))
-/*searchBFS([[1,0,2],[4,5,3],[7,8,6]]);
-searchBFS([[1,2,3],[4,0,5],[7,8,6]]);
-searchBFS([[1,5,2],[4,0,3],[7,8,6]]);
-searchBFS([[1,5,2],[7,4,3],[8,6,0]]);*/
 
-//assertTrue(arrayIsEqual(searchBFS([[1,5,2],[7,4,3],[8,6,0]]),["left","left","up","right","up","right","down","down"]))
+sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
+assertTrue(arrayIsEqual(searchDFS(sliding_problem,4),["left","right","down","down"]));
 
+sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
+assertTrue(arrayIsEqual(searchDFS(sliding_problem,9),["left","right","left","left","up","right","up","right","down","down"]));
+
+sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
+assertTrue(arrayIsEqual(searchDFS(sliding_problem,7),["left","left","up","right","up","right","down","down"]));
+
+sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
+assertTrue(arrayIsEqual(searchDFSID(sliding_problem),["left","left","up","right","up","right","down","down"]));
+
+sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
+assertTrue(arrayIsEqual(searchDFSID(sliding_problem),["down","down"]));
