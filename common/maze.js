@@ -27,7 +27,14 @@ function is_double_connected(map,pos,n,m){
     if (((x+1) < n) && map[x+1][y]==0) paths++;
     if (((y-1)>=0) && map[x][y-1]==0) paths++;
     if (((y+1) < m) && map[x][y+1]==0) paths++;
-    return paths>1;
+
+    if (((y+1) < m) && ((x+1) < n) && map[x+1][y+1]==0) paths++;
+    if (((y-1) >= 0) && ((x-1) >= 0) &&  map[x-1][y-1]==0) paths++;
+    if (((y+1) < m) && ((x-1) >= 0) && map[x-1][y+1]==0) paths++;
+    if (((y-1) >= 0) && ((x+1) < n) && map[x+1][y-1]==0) paths++;
+
+
+    return paths > 2;
 }
 
 function shuffle_array(o){
@@ -38,18 +45,22 @@ function shuffle_array(o){
 function DFSmaze(map){
 
     var stack = [];
-    stack.push([0,0]);
+    stack.push([1,1]);
     while (stack.length>0){
         var pos = stack.pop();
-        if(!is_double_connected(map,pos,map.length,map[0].length)){
-            map[pos[0]][pos[1]]=0;
+//        if(!is_double_connected(map,pos,map.length,map[0].length)){
             var neighbours = get_neighbours(map,pos,map.length,map[0].length);
-            neighbours = shuffle_array(neighbours);
-            for(var i = 0; i < neighbours.length;i++){
-                map[neighbours[i][0]][neighbours[i][1]]=2;
-                stack.push(neighbours[i]);
+            if(neighbours.length>0){
+                map[pos[0]][pos[1]]=0;
+                neighbours = shuffle_array(neighbours);
+                for(var i = 0; i < neighbours.length;i++){
+                    map[neighbours[i][0]][neighbours[i][1]]=2;
+                    stack.push(neighbours[i]);
+                }
+    
             }
-        }
+
+//        }
     }
     
     for(var i = 0; i<map.length;i++)
