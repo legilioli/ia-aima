@@ -56,10 +56,11 @@ var MazeGenerator = (function(){
         return map;
     }
 
+    //#TODO: manejar casos limites n=m=0,1, etc
     return {
         createMaze:function(n,m){
-            var maze = createEmptyMap(n,m);
-            return DFSmaze(maze,[0,0]);
+            var maze = createEmptyMap(n*2+1,m*2+1);
+            return DFSmaze(maze,[1,1]);
         }
     }
 
