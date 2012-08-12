@@ -78,7 +78,7 @@ var searchStrategy = {
 	    var end = false;
 	    console.log("starting DFSID search");
 	    while (!end && action_seq == null){
-		    action_seq = searchDFS(problem,depth_limit);
+		    action_seq = searchStrategy.searchDFS(problem,depth_limit);
 		    depth_limit++;
 		    if (depth_limit>iteration_limit)
 			    end = true;
