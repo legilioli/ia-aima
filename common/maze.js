@@ -1,94 +1,68 @@
+var MazeGenerator = (function(){
 
-function createEmptyMap(n,m){
-    var map = [];
-    for (var i=0; i<n; i++){
-        map[i] = [];
-        for (var j=0; j<m; j++)
-            map[i][j]=1;
+    function createEmptyMap(n,m){
+        var map = [];
+        for (var i=0; i<n; i++){
+            map[i] = [];
+            for (var j=0; j<m; j++)
+                map[i][j]=1;
+        }
+        return map;
     }
-    return map;
-}
 
+    function get_neighbours(map,pos,n,m){
+        var nb = [];
+        var x = pos[0]; var y = pos[1];
+        if (((x-2)>=0) && map[x-2][y]==1) nb.push([x-2,y]);
+        if (((x+2) < n) && map[x+2][y]==1) nb.push([x+2,y]);
+        if (((y-2)>=0) && map[x][y-2]==1) nb.push([x,y-2]);
+        if (((y+2) < m) && map[x][y+2]==1) nb.push([x,y+2]);
+        return nb;
+    }
 
-function get_neighbours(map,pos,n,m){
-    var nb = [];
-    var x = pos[0]; var y = pos[1];
-    if (((x-1)>=0) && map[x-1][y]==1) nb.push([x-1,y]);
-    if (((x+1) < n) && map[x+1][y]==1) nb.push([x+1,y]);
-    if (((y-1)>=0) && map[x][y-1]==1) nb.push([x,y-1]);
-    if (((y+1) < m) && map[x][y+1]==1) nb.push([x,y+1]);
-    return nb;
-}
+    function shuffle_array(o){
+	    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+	    return o;
+    }
 
-function is_double_connected(map,pos,n,m){
-    var paths = 0;
-    var x = pos[0]; var y = pos[1];
-    if (((x-1)>=0) && map[x-1][y]==0) paths++;
-    if (((x+1) < n) && map[x+1][y]==0) paths++;
-    if (((y-1)>=0) && map[x][y-1]==0) paths++;
-    if (((y+1) < m) && map[x][y+1]==0) paths++;
+    function carve(from,to,map){
+        map[from[0]][from[1]] = 0;
+        map[to[0]][to[1]] = 0;
+        var dx =0;
+        var dy =0;
+        if (from[0]!=to[0]) dx = ((to[0] - from[0])>0)?1:-1;
+        if (from[1]!=to[1]) dy = ((to[1] - from[1])>0)?1:-1;
+        map[from[0]+dx][from[1]+dy] = 0;
+    }
 
-    if (((y+1) < m) && ((x+1) < n) && map[x+1][y+1]==0) paths++;
-    if (((y-1) >= 0) && ((x-1) >= 0) &&  map[x-1][y-1]==0) paths++;
-    if (((y+1) < m) && ((x-1) >= 0) && map[x-1][y+1]==0) paths++;
-    if (((y-1) >= 0) && ((x+1) < n) && map[x+1][y-1]==0) paths++;
+    function DFSmaze(map,startpos){
 
-
-    return paths > 2;
-}
-
-function shuffle_array(o){
-	for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-	return o;
-}
-
-function DFSmaze(map){
-
-    var stack = [];
-    stack.push([1,1]);
-    while (stack.length>0){
-        var pos = stack.pop();
-//        if(!is_double_connected(map,pos,map.length,map[0].length)){
-            var neighbours = get_neighbours(map,pos,map.length,map[0].length);
+        var stack = [];
+        var current_cell;
+        stack.push(startpos);    
+        while(stack.length >0){
+            current_cell = stack[stack.length-1];
+            neighbours = get_neighbours(map,current_cell,map.length,map[0].length);     
             if(neighbours.length>0){
-                map[pos[0]][pos[1]]=0;
-                neighbours = shuffle_array(neighbours);
-                for(var i = 0; i < neighbours.length;i++){
-                    map[neighbours[i][0]][neighbours[i][1]]=2;
-                    stack.push(neighbours[i]);
-                }
-    
-            }
-
-//        }
+                shuffle_array(neighbours);  
+                var cell = neighbours.pop();
+                carve(current_cell,cell,map);
+                stack.push(cell);
+            } else {
+                stack.pop();
+            }        
+        }  
+        
+        return map;
     }
-    
-    for(var i = 0; i<map.length;i++)
-        for(var j=0; j<map[0].length;j++)
-            if (map[i][j]==2) map[i][j]=1;    
 
-    printMatrix(map);
-    return map;
-}
+    return {
+        createMaze:function(n,m){
+            var maze = createEmptyMap(n,m);
+            return DFSmaze(maze,[0,0]);
+        }
+    }
 
-function divideMap(map,x0,xf,y0,yf){
-    
-    // selecciono el x e y para la division   
-    var x = Math.floor(Math.random()*(yf-y0));
-    var y = Math.floor(Math.random()*(xf-x0));
+})()
 
-    console.log(x);
-    console.log(y);
 
-    for (var j=y0;j<=yf;j++)
-        map[y][j]=1;
-    for (var i=x0;i<=xf;i++)
-        map[i][x]=1;
-
-    // llamada recursiva a las camaras resulantes
-    
-//    map = divideMap(map,x0)
-    if ((x-x0)>0)
-
-    return map;
-}
