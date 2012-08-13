@@ -17,12 +17,63 @@ function printMatrix(m){
     }
 }
 
-function Problem(initial_state,succesors,goal_test,cost_function){
-    this.initial_state = initial_state;
-    this.succesors = succesors;
-    this.goal_test = goal_test;
-    this.cost = cost_function;
+
+function Timer(){
+    this.start_time = new Date();
+    this.stop_time;
+    this.elapsed = 0;
+    this.running = false;
 }
+
+Timer.prototype.reset = function(){
+    this.elapsed = 0;
+    this.running = false;
+}
+
+Timer.prototype.start = function(){
+    if(!this.running){
+        this.start_time = new Date();
+        this.running = true;
+    }
+}
+
+Timer.prototype.stop = function(){
+    if(this.running) {
+        this.stop_time = new Date();
+        this.elapsed = this.elapsed + (this.stop_time.getTime()-this.start_time.getTime());
+    }
+}
+
+Timer.prototype.getElapsed = function(){
+    return this.elapsed;
+}
+
+
+var logger = (function(){        
+        
+        var console_mode = true;
+
+        var output_element = null;
+        
+        var set_log_element = function(element_id){
+            output_element = document.getElementById(element_id);
+        };
+  
+        var output_to_element = function(msg){
+            output_element.innerHTML += (msg + "\n");
+            output_element.onchange();
+        };
+        
+        return {
+            log:function(msg){
+                if (console_mode==true) console.log(msg);
+                if (output_element) output_to_element(msg);
+            },
+            
+            set_log_element:set_log_element
+        }
+    })();
+
 
 assertTrue(!arrayIsEqual([1,3],[1]));
 assertTrue(!arrayIsEqual([1,3],[1,2]));
