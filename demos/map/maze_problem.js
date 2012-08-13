@@ -53,7 +53,7 @@
                cost:function(state,action){return 1;},
                //heuristica para busquedas informadas
                h:function(pos){
-                    return Math.sqrt(this.endPos[0]-pos[0])*(this.endPos[0]-pos[0])+(this.endPos[1]-pos[1])*(this.endPos[1]-pos[1])
+                    return (this.endPos[0]-pos[0])*(this.endPos[0]-pos[0])+(this.endPos[1]-pos[1])*(this.endPos[1]-pos[1])
                }
            }
         }
