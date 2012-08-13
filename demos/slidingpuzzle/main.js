@@ -1,5 +1,6 @@
 
 searchBFS = searchStrategy.searchBFS;
+searchBFSGraph = searchStrategy.searchBFSGraph;
 searchDFS = searchStrategy.searchDFS;
 searchDFSID = searchStrategy.searchDFSID;
 
@@ -10,6 +11,9 @@ assertTrue(arrayIsEqual(searchBFS(sliding_problem),[]))
 
 sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
 assertTrue(arrayIsEqual(searchBFS(sliding_problem),["left","left","up","right","up","right","down","down"]))
+
+sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
+assertTrue(arrayIsEqual(searchBFSGraph(sliding_problem),["left","left","up","right","up","right","down","down"]))
 
 sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
 assertTrue(arrayIsEqual(searchDFS(sliding_problem,4),["left","right","down","down"]));
