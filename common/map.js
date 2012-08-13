@@ -14,6 +14,18 @@ function Map(tsize, data) {
 			}
 		}
 	}
+
+    this.drawPath =function(dc, x, y,path,color) {
+        if (null==color) color = "rgba(0,0,0,0.5)";
+		var boxX = boxY = 0;
+		for(var i = 0; i < path.length; i++) {
+				boxX = x + path[i][1] * this.tsize;
+				boxY = y + path[i][0] * this.tsize;
+				dc.fillStyle = color;
+				dc.fillRect(boxX, boxY, this.tsize, this.tsize);
+		}
+	}    
+
 	this.getTileCoord = function(x, y) {
 		var j = Math.floor(y / this.tsize);
 		var i = Math.floor(x / this.tsize);
