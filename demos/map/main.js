@@ -1,70 +1,71 @@
 
+function generateRandomMap(n,m){
+    var map = [];
+    for(var i=0;i<n;i++){
+        var row = [];
+        for(var j=0;j<m;j++)
+            row.push(0);
+        map.push(row);       
+    }
+
+    if((n>2) && (m>2))
+    for(var i = 0; i < n-1;i++)
+        map[i][Math.floor(m/3)]=1; 
+
+    if((n>2) && (m>2))
+    for(var i = 1; i < n;i++)
+        map[i][Math.floor(m/3)*2]=1; 
+            
+    return map;
+}
+
+
 var run = function(){
 
-
-    var MazeProblem = {
-    
-        getActions: function(map,pos){
-            var n = map.length;
-            var m = map[0].length;
-            var actions = [];
-            if ((pos[0]-1)>=0 && map[pos[0]-1][pos[1]]==0) actions.push("up");
-            if ((pos[0]+1)<n && map[pos[0]+1][pos[1]]==0) actions.push("down");
-            if ((pos[1]+1)<m && map[pos[0]][pos[1]+1]==0) actions.push("right");
-            if ((pos[1]-1)>=0 && map[pos[0]][pos[1]-1]==0) actions.push("left");
-            return actions;
-        },
-
-        doAction:function(pos,action){
-            var new_pos = [pos[0],pos[1]];
-	        switch(action){
-		        case "up":new_pos[0]--;break;
-		        case "down": new_pos[0]++;break;
-		        case "left": new_pos[1]--;break;
-		        case "right": new_pos[1]++;break;
-            }
-            return new_pos;
-        },
-
-        
-        makeProblem: function(n,m){
-            
-           return {
-
-               map_data:MazeGenerator.createMaze(n,m),
-               initial_state:[1,1],//start_pos
-               endPos:[n*2-1,m*2-1],
-               goal_test: function(pos){
-                    return (pos[0]== this.endPos[0] && pos[1] == this.endPos[1]);
-               },
-               succesors: function(pos){
-                   var succesors = []
-                   var actions = MazeProblem.getActions(this.map_data,pos);
-                   for (var i=0; i<actions.length;i++)
-                       succesors.push({state:MazeProblem.doAction(pos,actions[i]),action:actions[i]});
-                   return succesors;  
-               },
-               cost:function(state,action){return 1;}
-           }
-        }
-
-    }
+    logger.set_log_element("console");
 
     var canvas = document.getElementById("c");
     dc = canvas.getContext("2d");
-    var n = 4;
-    var m = 4;
 
-    var problem = MazeProblem.makeProblem(n,m);
-    var map = new Map(400/(n*2+1),problem.map_data);
-    map.draw(dc,0,0);
+    var n = 50;
+    var m = 50;
 
-    var oldtime = new Date();
-    var actions = searchStrategy.searchDFSID(problem);
-    var newtime = new Date();
-    console.log("Tiempo de busqueda: " + (newtime.getTime()-oldtime.getTime())/1000 + " seg.");
+    var new_map_action = function(){
+        var problem = MazeProblem.makeProblem(n,m);
+//        problem.map_data = generateRandomMap(n*2+1,m*2+1);
+        var map = new Map(400/(n*2+1),problem.map_data);
+        map.draw(dc,0,0);
+        // solve maze
+        var timer = new Timer();
+        timer.start();
+        var actions = searchStrategy.searchBFSGraph(problem);
+        timer.stop();
+        path = MazeProblem.getPathCoords(actions,[1,1]);
+        map.drawPath(dc,0,0,path,"rgba(255,0,0,0.5)");
+        logger.log("Tiempo de busqueda: " + timer.getElapsed()/1000 + " seg.");
+        logger.log("------------------------------------------\n");
 
-//    console.log(actions);
+        timer.reset();
+        timer.start();
+        var actions = searchStrategy.searchAStarGraph(problem);
+        timer.stop();
+        path = MazeProblem.getPathCoords(actions,[1,1]);
+        map.drawPath(dc,0,0,path,"rgba(0,0,255,0.5)");
+        logger.log("Tiempo de busqueda: " + timer.getElapsed()/1000 + " seg.");
+        logger.log("------------------------------------------\n");
+    }
+
+    var button = document.getElementById("button_new");
+    button.onclick = new_map_action;
+
+    var textConsole = document.getElementById("console");
+    textConsole.onchange = function() {
+        textConsole.scrollTop=textConsole.scrollHeight; 
+    };
+
+
+    new_map_action();
+
 }
 
 
