@@ -115,25 +115,25 @@ var searchStrategy = {
     },
 
 
-    searchAStarGraph: function(problem){
-        var queue = [];
+    searchAStarGraph: function(problem,h){
+        var frontier = [];
         var closed = new Set();
-        var max_nodes = 10000;
+        var max_nodes = 100000;
         var depth = 0;
         var nodes_expanded = 0;
         var root = {node:searchStrategy.makeNode(problem.initial_state,null,null,0,0),priority:0};
-        queue.push(root);
+        frontier.push(root);
         searchStrategy.log("starting A* graph search");
-	    while(queue.length>0 && nodes_expanded<max_nodes){
+	    while(frontier.length>0 && nodes_expanded<max_nodes){
             nodes_expanded++;
-            var min_node = queue[0];
+            var min_node = frontier[0];
             var min_node_idx = 0;
-            for (var i=0; i<queue.length;i++)
-                if (queue[i].priority<min_node.priority){ 
+            for (var i=0; i<frontier.length;i++)
+                if (frontier[i].priority<min_node.priority){ 
                     min_node_idx = i;
-                    min_node = queue[i];
+                    min_node = frontier[i];
                 }
-		    var node = queue.splice(min_node_idx,1)[0];
+		    var node = frontier.splice(min_node_idx,1)[0];
             node = node.node;
 
 		    if (problem.goal_test(node.state)){
@@ -148,6 +148,7 @@ var searchStrategy = {
                 searchStrategy.logPerformance(nodes_expanded,depth);
                 searchStrategy.log("States visited: " + closed.size());
                 searchStrategy.log("Solution found. Length: "+ action_seq.length);
+                searchStrategy.log("Action sequence: "+ action_seq);
                 return action_seq;
             }
             if(!closed.contains(node.state)){
@@ -155,7 +156,7 @@ var searchStrategy = {
            		var succesors = problem.succesors(node.state);
 	            for (var i=0;i<succesors.length;i++){
                     var step_cost = problem.cost(node.state,node.action);
-	                queue.push({node:searchStrategy.makeNode(succesors[i].state,node,succesors[i].action,node.cost+step_cost,node.depth+1),priority:problem.h(succesors[i].state)+node.cost+step_cost});
+	                frontier.push({node:searchStrategy.makeNode(succesors[i].state,node,succesors[i].action,node.cost+step_cost,node.depth+1),priority:h(succesors[i].state)+node.cost+step_cost});
                 }
             }
             if (node.depth > depth) depth = node.depth;
@@ -169,7 +170,7 @@ var searchStrategy = {
     searchBFSGraph: function(problem){
         var queue = [];
         var closed = new Set();
-        var max_nodes = 10000;
+        var max_nodes = 100000;
         var depth = 0;
         var nodes_expanded = 0;
         queue.push(searchStrategy.makeNode(problem.initial_state,null,null,0,0));
@@ -191,6 +192,7 @@ var searchStrategy = {
                 //searchStrategy.log(action_seq);
                 return action_seq;
             } 
+
             if(!closed.contains(node.state)){
                 closed.put(node.state);
            		var succesors = problem.succesors(node.state);
