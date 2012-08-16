@@ -156,7 +156,7 @@ var searchStrategy = {
            		var succesors = problem.succesors(node.state);
 	            for (var i=0;i<succesors.length;i++){
                     var step_cost = problem.cost(node.state,node.action);
-	                frontier.push({node:searchStrategy.makeNode(succesors[i].state,node,succesors[i].action,node.cost+step_cost,node.depth+1),priority:h(succesors[i].state)+node.cost+step_cost});
+	                frontier.push({node:searchStrategy.makeNode(succesors[i].state,node,succesors[i].action,node.cost+step_cost,node.depth+1),priority:problem.h(succesors[i].state)+node.cost+step_cost});
                 }
             }
             if (node.depth > depth) depth = node.depth;

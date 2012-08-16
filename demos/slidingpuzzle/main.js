@@ -29,11 +29,11 @@ sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
 assertTrue(arrayIsEqual(searchDFSID(sliding_problem),["left","left","up","right","up","right","down","down"]));
 
 sliding_problem = SlidingPuzzle.makeProblem([[1,5,2],[7,4,3],[8,6,0]]);
-assertTrue(arrayIsEqual(searchAStarGraph(sliding_problem,SlidingPuzzle.h),["left","left","up","right","up","right","down","down"]));
+assertTrue(arrayIsEqual(searchAStarGraph(sliding_problem),["left","left","up","right","up","right","down","down"]));
 
 sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
 assertTrue(arrayIsEqual(searchDFSID(sliding_problem),["down","down"]));
 
 sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
-assertTrue(arrayIsEqual(searchAStarGraph(sliding_problem,SlidingPuzzle.h),["down","down"]));
+assertTrue(arrayIsEqual(searchAStarGraph(sliding_problem),["down","down"]));
 

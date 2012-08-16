@@ -69,31 +69,34 @@ var SlidingPuzzle =  {
         return 1
     },
 
-    h:function(state){
-        var board_size = state.length;
-        var accum = 0;
-        
-        getTileGoalPos = function(i,n){
-            var xdest = Math.floor((i-1)/n);
-            var ydest = i - xdest*n - 1;
-            return [xdest,ydest];
-        };
-
-        getTileDistFromGoal = function(i,pos,n){
-            var goalPos = getTileGoalPos(i,n);
-            var xdist = Math.abs(pos[0]-goalPos[0]);
-            var ydist = Math.abs(pos[1]-goalPos[2]);
-            return xdist + ydist;
-        };
-
-        for(var i=0; i<board_size;i++)
-            for ( var j=0; j<board_size; j++)
-            if (state[i,j]!=0)
-                accum += getTileDistFromGoal(state[i,j],[i,j],board_size);
-    },
-
     makeProblem: function(board){
-        return new Problem(board,this.succesors,this.isSolved,this.cost);
+        
+
+        var problem = new Problem(board,this.succesors,this.isSolved,this.cost);
+        problem['h']=function(state){
+            var board_size = state.length;
+            var accum = 0;
+            
+            getTileGoalPos = function(i,n){
+                var xdest = Math.floor((i-1)/n);
+                var ydest = i - xdest*n - 1;
+                return [xdest,ydest];
+            };
+
+            getTileDistFromGoal = function(i,pos,n){
+                var goalPos = getTileGoalPos(i,n);
+                var xdist = Math.abs(pos[0]-goalPos[0]);
+                var ydist = Math.abs(pos[1]-goalPos[2]);
+                return xdist + ydist;
+            };
+
+            for(var i=0; i<board_size;i++)
+                for ( var j=0; j<board_size; j++)
+                if (state[i,j]!=0)
+                    accum += getTileDistFromGoal(state[i,j],[i,j],board_size);
+        }
+
+        return problem;
     },
 
     test: function(){

@@ -27,12 +27,12 @@ var run = function(){
     var canvas = document.getElementById("c");
     dc = canvas.getContext("2d");
 
-    var n = 50;
-    var m = 50;
+    var n = 30;
+    var m = 30;
 
     var new_map_action = function(){
         var problem = MazeProblem.makeProblem(n,m);
-//        problem.map_data = generateRandomMap(n*2+1,m*2+1);
+        //problem.map_data = generateRandomMap(n*2+1,m*2+1);
         var map = new Map(400/(n*2+1),problem.map_data);
         map.draw(dc,0,0);
         // solve maze
@@ -47,7 +47,7 @@ var run = function(){
 
         timer.reset();
         timer.start();
-        var actions = searchStrategy.searchAStarGraph(problem);
+        var actions = searchStrategy.searchAStarGraph(problem,problem.h);
         timer.stop();
         path = MazeProblem.getPathCoords(actions,[1,1]);
         map.drawPath(dc,0,0,path,"rgba(0,0,255,0.5)");
