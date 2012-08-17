@@ -10,7 +10,7 @@ function Map(tsize, data) {
 				boxX = x + j * this.tsize;
 				boxY = y + i * this.tsize;
 				dc.fillStyle = (this.data[i][j] == 1) ? "#000" : "#aaa";
-				dc.fillRect(boxX, boxY, this.tsize, this.tsize);
+				dc.fillRect(boxX, boxY, this.tsize+0.5, this.tsize+0.5);
 			}
 		}
 	}
@@ -22,7 +22,7 @@ function Map(tsize, data) {
 				boxX = x + path[i][1] * this.tsize;
 				boxY = y + path[i][0] * this.tsize;
 				dc.fillStyle = color;
-				dc.fillRect(boxX, boxY, this.tsize, this.tsize);
+				dc.fillRect(boxX, boxY, this.tsize+0.5, this.tsize+0.5);
 		}
 	}    
 
