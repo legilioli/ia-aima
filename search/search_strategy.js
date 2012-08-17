@@ -59,7 +59,7 @@ var searchStrategy = {
                 }
                 action_seq.reverse();
                 searchStrategy.logPerformance(nodes_expanded,depth);
-                searchStrategy.log(action_seq);
+                //searchStrategy.log(action_seq);
                 return action_seq;
             } 
        		var succesors = problem.succesors(node.state);
@@ -99,7 +99,7 @@ var searchStrategy = {
 
                 action_seq.reverse();
                 searchStrategy.logPerformance(nodes_expanded,depth);
-                searchStrategy.log(action_seq);
+                //searchStrategy.log(action_seq);
                 return action_seq;
             }
        		var succesors = problem.succesors(node.state);
@@ -148,7 +148,7 @@ var searchStrategy = {
                 searchStrategy.logPerformance(nodes_expanded,depth);
                 searchStrategy.log("States visited: " + closed.size());
                 searchStrategy.log("Solution found. Length: "+ action_seq.length);
-                searchStrategy.log("Action sequence: "+ action_seq);
+                //searchStrategy.log("Action sequence: "+ action_seq);
                 return action_seq;
             }
             if(!closed.contains(node.state)){
@@ -224,7 +224,7 @@ var searchStrategy = {
           	          current_node = current_node.parent;
           	      }
           	      action_seq.reverse();
-          	      searchStrategy.log(action_seq);
+          	      //searchStrategy.log(action_seq);
                   return action_seq;
 		    }
 			var succesors = problem.succesors(node.state);
