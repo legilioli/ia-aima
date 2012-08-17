@@ -1,3 +1,45 @@
+function SlidingPuzzleView(board,w,h){
+    this.board = board;
+    this.w=w;
+    this.h=h;
+    this.tsize = this.w/board.length;
+    this.image = null;
+}
+
+SlidingPuzzleView.prototype.setImage = function(image){
+    this.image = image;
+    this.imgw = image.width;
+    this.imgh = image.height;
+};
+
+
+SlidingPuzzleView.prototype.draw = function(dc,x,y){
+		var boxX = boxY = 0;
+        dc.font = "60px sans-serif";
+		for(var i = 0; i < this.board.length; i++) {
+			for(var j = 0; j < this.board[0].length; j++) {
+				boxX = x + j * this.tsize;
+				boxY = y + i * this.tsize;
+                if (this.image && (this.board[i][j]!=0)){
+                    var sourcew = Math.floor(this.imgw/this.board.length);
+                    var sourceh = Math.floor(this.imgh/this.board.length);
+                    var tile_value = this.board[i][j];
+                    var sourcex = Math.floor((tile_value - Math.floor((tile_value-1)/this.board.length)*this.board.length - 1)* sourceh);
+                    var sourcey = Math.floor((tile_value-1)/this.board.length) * sourcew;
+                    dc.drawImage(this.image,sourcex,sourcey,sourcew,sourceh,boxX,boxY,this.tsize,this.tsize);
+                } else {
+				    dc.fillStyle = (this.board[i][j]==0)?"#000":"#aaa";
+				    dc.fillRect(boxX, boxY, this.tsize+0.0, this.tsize+0.0);
+                    if (this.board[i][j]!=0)
+                        dc.strokeText(this.board[i][j],boxX+40,boxY+80);
+                }
+                    dc.strokeStyle = "#000";
+				    dc.strokeRect(boxX, boxY, this.tsize+0.0, this.tsize+0);
+			}
+		}
+};
+
+
 
 var SlidingPuzzle =  {
 
