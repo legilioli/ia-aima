@@ -118,7 +118,7 @@ var searchStrategy = {
     searchAStarGraph: function(problem,h){
         var frontier = [];
         var closed = new Set();
-        var max_nodes = 100000;
+        var max_nodes = 200000;
         var depth = 0;
         var nodes_expanded = 0;
         var root = {node:searchStrategy.makeNode(problem.initial_state,null,null,0,0),priority:0};
