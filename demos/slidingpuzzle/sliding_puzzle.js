@@ -39,6 +39,19 @@ SlidingPuzzleView.prototype.draw = function(dc,x,y){
 		}
 };
 
+SlidingPuzzleView.prototype.move = function(action){
+    var pos = SlidingPuzzle.getBlankPosition(this.board);
+    if (pos!=null) {
+        var actions = SlidingPuzzle.getActions(pos[0],pos[1],this.board.length);
+        if(actions.indexOf(action)>-1)
+            this.board = SlidingPuzzle.doAction(this.board,action);
+    }
+};
+
+
+
+
+
 
 
 var SlidingPuzzle =  {
