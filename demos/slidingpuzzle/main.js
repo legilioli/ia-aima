@@ -11,7 +11,7 @@ var run = function(){
     searchDFSID = searchStrategy.searchDFSID;
     searchAStarGraph = searchStrategy.searchAStarGraph;
 
-    SlidingPuzzle.test();
+/*    SlidingPuzzle.test();
 
     sliding_problem = SlidingPuzzle.makeProblem([[1,2,3],[4,5,6],[7,8,0]]);
     assertTrue(arrayIsEqual(searchBFS(sliding_problem),[]))
@@ -39,13 +39,13 @@ var run = function(){
 
     sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
     assertTrue(arrayIsEqual(searchDFSID(sliding_problem),["down","down"]));
-
+/*
 /*    sliding_problem = SlidingPuzzle.makeProblem([[[4,8,1],[7,3,0],[6,2,5]]]);
     searchDFSID(sliding_problem);
-*/
+
     sliding_problem = SlidingPuzzle.makeProblem([[1,2,0],[4,5,3],[7,8,6]]);
     assertTrue(arrayIsEqual(searchAStarGraph(sliding_problem),["down","down"]));
-
+*/
     canv = document.getElementById("c");
     dc = canv.getContext("2d");
 
@@ -63,8 +63,8 @@ var run = function(){
 
 //    var board = [[4,8,1],[7,3,0],[6,2,5]]; //toma 15 segs y ~36 mb de memoria
     var board = [[1,5,2],[7,4,3],[8,6,0]];
-    var problem = SlidingPuzzle.makeProblem([[1,2,3],[4,5,6],[7,8,0]]);
-    var solution = searchAStarGraph(SlidingPuzzle.makeProblem(board));
+
+//    var solution = searchAStarGraph(SlidingPuzzle.makeProblem(board));
     
     var view = new SlidingPuzzleView(board,400,400);
     var img = new Image();
